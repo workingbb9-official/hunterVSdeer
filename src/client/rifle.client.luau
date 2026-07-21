@@ -1,7 +1,10 @@
 local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local Debris = game:GetService("Debris")
+
+local bulletFiredEvent = ReplicatedStorage:WaitForChild("BulletFiredEvent")
 
 local player = Players.LocalPlayer
 local mouse = player:GetMouse()
@@ -56,12 +59,7 @@ local function fireRifle(gunMuzzlePosition)
     local endPosition = result and result.Position or (gunMuzzlePosition + direction)
 
     shootVisualBullet(gunMuzzlePosition, endPosition)
-
-    if not result then
-        return
-    end
-
-    print(result.Instance)
+    bulletFiredEvent:FireServer(gunMuzzlePosition, direction)
 end
 
 local function tryFireRifle()
@@ -81,3 +79,5 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
         tryFireRifle()
     end
 end)
+
+bulletFiredEvent.OnClientEvent:Connect(shootVisualBullet)
