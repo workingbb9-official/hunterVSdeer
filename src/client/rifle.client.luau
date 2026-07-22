@@ -9,10 +9,15 @@ local bulletFiredEvent = ReplicatedStorage:WaitForChild("BulletFiredEvent")
 local player = Players.LocalPlayer
 local mouse = player:GetMouse()
 
+local scripts = player:WaitForChild("PlayerScripts")
+local UI = require(scripts:WaitForChild("UI"))
+
 local MAX_DISTANCE = 500
 local BULLET_SPEED = 300
 
+local MAX_AMMO = 5
 local ammo = 5
+UI.displayAmmo(ammo, MAX_AMMO)
 
 local camera = workspace.CurrentCamera
 local arms = camera:WaitForChild("FPS Arm")
@@ -66,9 +71,7 @@ local function tryFireRifle()
     if ammo > 0 then
         fireRifle(barrel.Position)
         ammo -= 1
-        print(ammo)
-    else
-        print("No ammo left")
+        UI.displayAmmo(ammo, MAX_AMMO)
     end
 end
 
